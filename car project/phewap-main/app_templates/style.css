@@ -1,0 +1,131 @@
+/* Styles de base */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #000000;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: yellow;
+    font-family: Impact;
+    border: 5px solid yellow;
+    background-color: black;
+    border-radius: 3%;
+    width: 300;
+    height: 30px;
+}
+
+h5 {
+    color: #e7e7e7;
+    
+}
+
+p {
+    color: yellow;
+    font-family: Haettenschweiler;
+    font-size: xx-small;
+    margin-left: 150px
+}
+
+.remote-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    max-width: 3000px;
+    margin: auto;
+    
+    border: 5px solid gray;
+    background-color: rgba(105, 105, 105, 0.4);
+    border-radius: 45%;
+    width: 260px;
+    height: 260px;
+  
+}
+
+/* Style des boutons */
+button {
+    padding: 15px;
+    font-size: 18px;
+    font-family: Bahnschrift SemiBold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: darkorange;
+    height: 80px;
+    width: 80px;
+    color: black;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.btn-left:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-right:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-forward:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-backward:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-brake {
+    background-color: red;
+    color: orange;
+    font-family: fantasy;
+    font-size: 20px;
+
+}
+
+.btn-brake:hover {
+    background-color: darkred;
+}
+
+.btn-orange.left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.btn-orange.right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.btn-reset {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    margin-top: 70px;
+    margin-right: 270px;
+    grid-column: span 3;
+}
+
+.btn-reset:hover {
+    background-color: lightgray;
+}
+
+.btn-forward { grid-column: 2; grid-row: 1; }
+.btn-left { grid-column: 1; grid-row: 2; }
+.btn-brake { grid-column: 2; grid-row: 2; }
+.btn-right { grid-column: 3; grid-row: 2; }
+.btn-backward { grid-column: 2; grid-row: 3; }
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

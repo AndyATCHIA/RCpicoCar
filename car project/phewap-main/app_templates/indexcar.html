@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>/* Styles de base */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #000000;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: yellow;
+    font-family: Impact;
+    border: 5px solid yellow;
+    background-color: black;
+    border-radius: 3%;
+    width: 300;
+    height: 30px;
+}
+
+h5 {
+    color: #e7e7e7;
+    
+}
+
+p {
+    color: yellow;
+    font-family: Haettenschweiler;
+    font-size: xx-small;
+    margin-left: 150px
+}
+
+.remote-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    max-width: 3000px;
+    margin: auto;
+    
+    border: 5px solid gray;
+    background-color: rgba(105, 105, 105, 0.4);
+    border-radius: 45%;
+    width: 260px;
+    height: 260px;
+  
+}
+
+/* Style des boutons */
+button {
+    padding: 15px;
+    font-size: 18px;
+    font-family: Bahnschrift SemiBold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: darkorange;
+    height: 80px;
+    width: 80px;
+    color: black;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.btn-left:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-right:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-forward:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-backward:hover {
+    background-color: darkgoldenrod;
+}
+
+.btn-brake {
+    background-color: red;
+    color: orange;
+    font-family: fantasy;
+    font-size: 20px;
+
+}
+
+.btn-brake:hover {
+    background-color: darkred;
+}
+
+.btn-orange.left {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.btn-orange.right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.btn-reset {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    margin-top: 70px;
+    margin-right: 270px;
+    grid-column: span 3;
+}
+
+.btn-reset:hover {
+    background-color: lightgray;
+}
+
+.btn-forward { grid-column: 2; grid-row: 1; }
+.btn-left { grid-column: 1; grid-row: 2; }
+.btn-brake { grid-column: 2; grid-row: 2; }
+.btn-right { grid-column: 3; grid-row: 2; }
+.btn-backward { grid-column: 2; grid-row: 3; }
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+</style>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>RPI Pico W [ARMY CAR]</title>
+    </head>
+    <body>
+        
+        <h2>R C Army Truck</h2>
+        <h5>The Raspberry Pi Pico W is connected to the network! <span id="mode"></span> mode</h5>
+        
+        <div class="remote-container">
+            <button class="btn-left" id="turnLeft">LEFT</button>
+            <button class="btn-right" id="turnRight">RIGHT</button>
+            <button class="btn-forward" id="Forward">FRONT</button>
+            <button class="btn-backward" id="Backward">BACK</button>
+            <button class="btn-brake" id="Brake">BRAKE</button>
+        </div>
+            
+        <button class="btn-reset" id="resetBtn">Reset Wifi</button>
+
+        <script>
+            let braking = false;
+            let activeDirections = new Set();
+
+            async function sendCommand(command, state) {
+                try {
+                    await fetch(`/${command}_${state}`, { method: "POST", keepalive: true });
+                } catch (error) {
+                    console.error("Error sending command:", error);
+                }
+            }
+
+            function setupButton(id, command) {
+                const button = document.getElementById(id);
+                button.addEventListener("mousedown", () => {
+                    if (!braking || command === "brake") {
+                        sendCommand(command, "on");
+                        if (["forward", "backward", "turn_left", "turn_right"].includes(command)) {
+                            activeDirections.add(command);
+                        }
+                    }
+                    if (command === "brake") {
+                        braking = true;
+                        stopAllDirections();
+                    }
+                });
+
+                button.addEventListener("mouseup", () => {
+                    sendCommand(command, "off");
+                    if (["forward", "backward", "turn_left", "turn_right"].includes(command)) {
+                        activeDirections.delete(command);
+                    }
+                    if (command === "brake") {
+                        braking = false;
+                    }
+                });
+            }
+
+            function stopAllDirections() {
+                activeDirections.forEach(command => sendCommand(command, "off"));
+                activeDirections.clear();
+            }
+
+            // Directional buttons (can be pressed together)
+            setupButton("forward", "forward");
+            setupButton("backward", "backward");
+            setupButton("left", "turn_left");
+            setupButton("right", "turn_right");
+
+            // Brake button (blocks other commands)
+            setupButton("brake", "brake");
+
+            // Reset button (triggers full reset)
+            document.getElementById("reset").addEventListener("click", async () => {
+                await sendCommand("reset", "now");
+            });
+
+        </script>
+        <p>入٠下٠く٠什٠エ٠ 入</p>
+    </body>
+</html>
